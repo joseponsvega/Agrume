@@ -265,6 +265,16 @@ public final class Agrume: UIViewController {
       let longPress = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress(_:)))
       view.addGestureRecognizer(longPress)
     }
+    
+    NotificationCenter.default.addObserver(self, selector: #selector(willResignActive), name: UIApplication.didEnterBackgroundNotification, object: nil)
+  }
+  
+  var willResignActiveDelegate: (() -> Void)?
+  
+  @objc func willResignActive() {
+    print("willResignActive")
+      
+    willResignActiveDelegate?()
   }
 
   @objc
