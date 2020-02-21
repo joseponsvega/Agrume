@@ -421,13 +421,13 @@ extension Agrume: AgrumeDataSource {
   }
   
   public func iconImage(forIndex index: Int) -> UIImage? {
-//    if #available(iOS 13.0, *) {
-//      return UIImage(systemName: "plus")
-//    } else {
-//      fatalError()
-//    }
-//    
-    return nil
+    if #available(iOS 13.0, *) {
+      return UIImage(systemName: "plus")
+    } else {
+      fatalError()
+    }
+//
+//    return nil
   }
 }
 
@@ -454,6 +454,9 @@ extension Agrume: UICollectionViewDataSource {
       self?.spinner.alpha = 0
     }
     cell.iconImage = dataSource?.iconImage(forIndex: indexPath.item)
+    cell.iconImageClick = {
+      print("OTHER ONE")
+    }
     
     // Only allow panning if horizontal swiping fails. Horizontal swiping is only active for zoomed in images
     collectionView.panGestureRecognizer.require(toFail: cell.swipeGesture)

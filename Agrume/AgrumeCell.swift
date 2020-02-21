@@ -85,15 +85,12 @@ final class AgrumeCell: UICollectionViewCell {
   var iconImage: UIImage? {
     didSet {
       iconImageView.image = iconImage
-//      if #available(iOS 13.0, *) {
-//        iconImageView.image = UIImage(systemName: "plus")
-//      } else {
-//        fatalError()
-//      }
             
       updateScrollViewAndImageViewForCurrentMetrics()
     }
   }
+  var iconImageClick: (() -> Void)?
+  
   weak var delegate: AgrumeCellDelegate?
 
   private(set) lazy var swipeGesture: UISwipeGestureRecognizer = {
@@ -110,10 +107,20 @@ final class AgrumeCell: UICollectionViewCell {
     contentView.addSubview(scrollView)
     scrollView.addSubview(imageView)
     scrollView.addSubview(iconImageView)
+    
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(gesture:)))
+    iconImageView.addGestureRecognizer(tapGesture)
+    // make sure imageView can be interacted with by user
+    iconImageView.isUserInteractionEnabled = true
+    
     setupGestureRecognizers()
     if hasPhysics {
       animator = UIDynamicAnimator(referenceView: scrollView)
     }
+  }
+  
+  @objc func imageTapped(gesture: UIGestureRecognizer) {
+    iconImageClick?()
   }
 
   required init?(coder aDecoder: NSCoder) {
