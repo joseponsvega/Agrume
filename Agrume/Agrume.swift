@@ -420,6 +420,9 @@ extension Agrume: AgrumeDataSource {
     }
   }
   
+  public func iconImage(forIndex index: Int) -> UIImage? {
+    return nil
+  }
 }
 
 extension Agrume: UICollectionViewDataSource {
@@ -444,6 +447,8 @@ extension Agrume: UICollectionViewDataSource {
       cell.image = image
       self?.spinner.alpha = 0
     }
+    cell.iconImage = dataSource?.iconImage(forIndex: indexPath.item)
+    
     // Only allow panning if horizontal swiping fails. Horizontal swiping is only active for zoomed in images
     collectionView.panGestureRecognizer.require(toFail: cell.swipeGesture)
     cell.delegate = self

@@ -37,6 +37,13 @@ final class AgrumeCell: UICollectionViewCell {
     imageView.layer.allowsEdgeAntialiasing = true
     return imageView
   }()
+  private lazy var iconImageView: UIImageView = {
+    let imageView = UIImageView()
+    imageView.contentMode = .scaleAspectFit
+    imageView.clipsToBounds = true
+    imageView.layer.allowsEdgeAntialiasing = true
+    return imageView
+  }()
   private var animator: UIDynamicAnimator?
 
   private lazy var singleTapGesture: UITapGestureRecognizer = {
@@ -71,6 +78,19 @@ final class AgrumeCell: UICollectionViewCell {
       } else {
         imageView.image = image
       }
+      
+      updateScrollViewAndImageViewForCurrentMetrics()
+    }
+  }
+  var iconImage: UIImage? {
+    didSet {
+//      iconImageView.image = iconImage
+      if #available(iOS 13.0, *) {
+        iconImageView.image = UIImage(systemName: "plus")
+      } else {
+        fatalError()
+      }
+            
       updateScrollViewAndImageViewForCurrentMetrics()
     }
   }
@@ -89,9 +109,17 @@ final class AgrumeCell: UICollectionViewCell {
     backgroundColor = .clear
     contentView.addSubview(scrollView)
     scrollView.addSubview(imageView)
+    scrollView.addSubview(iconImageView)
     setupGestureRecognizers()
     if hasPhysics {
       animator = UIDynamicAnimator(referenceView: scrollView)
+    }
+    
+    //TODO: remove
+    if #available(iOS 13.0, *) {
+      iconImage = UIImage(systemName: "plus")
+    } else {
+      fatalError()
     }
   }
 
@@ -349,8 +377,28 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
     if let image = imageView.image ?? imageView.currentImage {
       imageView.frame = resizedFrame(forSize: image.size)
     }
+    if let iconImage = iconImageView.image {
+      iconImageView.frame = createIconFrame()
+    }
     scrollView.contentSize = imageView.frame.size
     scrollView.contentInset = contentInsetForScrollView(atScale: scrollView.zoomScale)
+  }
+  
+  private func createIconFrame() -> CGRect {
+    var rect = CGRect()
+    
+    let iconLength = CGFloat(50)
+    
+    let frameWidth = contentView.frame.width
+    let frameHeight = contentView.frame.height
+    
+    let x = (frameWidth - iconLength) / 2
+    let y = (frameHeight) / 2 - iconLength
+    
+    rect.size = CGSize(width: iconLength, height: iconLength)
+    rect.origin = CGPoint(x: x, y: y)
+    
+    return rect.integral
   }
 
   private func resizedFrame(forSize size: CGSize) -> CGRect {

@@ -15,4 +15,5 @@ public protocol AgrumeDataSource: AnyObject {
   /// - Parameter completion: The completion that returns the image to be shown at the index
   func image(forIndex index: Int, completion: @escaping (UIImage?) -> Void)
   
+  func iconImage(forIndex index: Int) -> UIImage?
 }
