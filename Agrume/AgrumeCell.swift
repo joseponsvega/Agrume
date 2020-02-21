@@ -106,7 +106,7 @@ final class AgrumeCell: UICollectionViewCell {
     backgroundColor = .clear
     contentView.addSubview(scrollView)
     scrollView.addSubview(imageView)
-    scrollView.addSubview(iconImageView)
+    contentView.addSubview(iconImageView)
     
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(gesture:)))
     iconImageView.addGestureRecognizer(tapGesture)
