@@ -421,6 +421,12 @@ extension Agrume: AgrumeDataSource {
   }
   
   public func iconImage(forIndex index: Int) -> UIImage? {
+//    if #available(iOS 13.0, *) {
+//      return UIImage(systemName: "plus")
+//    } else {
+//      fatalError()
+//    }
+//    
     return nil
   }
 }

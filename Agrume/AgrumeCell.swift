@@ -84,12 +84,12 @@ final class AgrumeCell: UICollectionViewCell {
   }
   var iconImage: UIImage? {
     didSet {
-//      iconImageView.image = iconImage
-      if #available(iOS 13.0, *) {
-        iconImageView.image = UIImage(systemName: "plus")
-      } else {
-        fatalError()
-      }
+      iconImageView.image = iconImage
+//      if #available(iOS 13.0, *) {
+//        iconImageView.image = UIImage(systemName: "plus")
+//      } else {
+//        fatalError()
+//      }
             
       updateScrollViewAndImageViewForCurrentMetrics()
     }
@@ -113,13 +113,6 @@ final class AgrumeCell: UICollectionViewCell {
     setupGestureRecognizers()
     if hasPhysics {
       animator = UIDynamicAnimator(referenceView: scrollView)
-    }
-    
-    //TODO: remove
-    if #available(iOS 13.0, *) {
-      iconImage = UIImage(systemName: "plus")
-    } else {
-      fatalError()
     }
   }
 
@@ -393,7 +386,7 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
     let frameHeight = contentView.frame.height
     
     let x = (frameWidth - iconLength) / 2
-    let y = (frameHeight) / 2 - iconLength
+    let y = frameHeight / 2 - iconLength
     
     rect.size = CGSize(width: iconLength, height: iconLength)
     rect.origin = CGPoint(x: x, y: y)
