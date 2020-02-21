@@ -28,3 +28,15 @@ final class SingleImageViewController: UIViewController {
     return helper
   }
 }
+
+extension SingleURLViewController: AgrumeControllerDelegate {
+  func viewDidAppear() {
+    print("viewDidAppear")
+  }
+  
+  func viewDidDisappear() {
+    print("viewDidDisappear")
+  }
+  
+  
+}

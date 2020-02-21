@@ -29,6 +29,7 @@ public final class Agrume: UIViewController {
   
   public typealias DownloadCompletion = (_ image: UIImage?) -> Void
 
+  public var agrumeControllerDelegate: AgrumeControllerDelegate?
   /// Optional closure to call when user long pressed on an image
   public var onLongPress: ((UIImage?, UIViewController) -> Void)?
   /// Optional closure to call whenever Agrume is about to dismiss.
@@ -53,7 +54,9 @@ public final class Agrume: UIViewController {
 
   /// Default tap behaviour is to dismiss the view if zoomed out
   public var tapBehavior: TapBehavior = .dismissIfZoomedOut
-
+  
+  public var willResignActiveDelegate: (() -> Void)?
+  
   override public var preferredStatusBarStyle: UIStatusBarStyle {
     statusBarStyle ?? super.preferredStatusBarStyle
   }
@@ -271,7 +274,17 @@ public final class Agrume: UIViewController {
     NotificationCenter.default.addObserver(self, selector: #selector(willResignActive), name: UIApplication.didEnterBackgroundNotification, object: nil)
   }
   
-  public var willResignActiveDelegate: (() -> Void)?
+  public override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    
+    agrumeControllerDelegate?.viewDidAppear()
+  }
+  
+  public override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    
+    agrumeControllerDelegate?.viewDidDisappear()
+  }
   
   @objc func willResignActive() {
     print("willResignActive")
@@ -563,4 +576,10 @@ extension Agrume: AgrumeCloseButtonOverlayViewDelegate {
     dismiss()
   }
 
+}
+
+public protocol AgrumeControllerDelegate {
+  func viewDidAppear()
+  
+  func viewDidDisappear()
 }
