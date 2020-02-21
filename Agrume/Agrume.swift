@@ -269,7 +269,7 @@ public final class Agrume: UIViewController {
     NotificationCenter.default.addObserver(self, selector: #selector(willResignActive), name: UIApplication.didEnterBackgroundNotification, object: nil)
   }
   
-  var willResignActiveDelegate: (() -> Void)?
+  public var willResignActiveDelegate: (() -> Void)?
   
   @objc func willResignActive() {
     print("willResignActive")
