@@ -37,6 +37,8 @@ public final class Agrume: UIViewController {
   public var didDismiss: (() -> Void)?
   /// Optional closure to call whenever Agrume scrolls to the next image in a collection. Passes the "page" index
   public var didScroll: ((_ index: Int) -> Void)?
+  /// Optional when icon image is clicked
+  public var didClickIcon: ((_ index: Int) -> Void)?
   /// An optional download handler. Passed the URL that is supposed to be loaded. Call the completion with the image
   /// when the download is done.
   public var download: ((_ url: URL, _ completion: @escaping DownloadCompletion) -> Void)?
@@ -455,7 +457,7 @@ extension Agrume: UICollectionViewDataSource {
     }
     cell.iconImage = dataSource?.iconImage(forIndex: indexPath.item)
     cell.iconImageClick = {
-      print("OTHER ONE")
+      self.didClickIcon?(indexPath.item)
     }
     
     // Only allow panning if horizontal swiping fails. Horizontal swiping is only active for zoomed in images
