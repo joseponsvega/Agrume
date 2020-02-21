@@ -240,6 +240,7 @@
 					};
 					F2A51FF81B10E00700924912 = {
 						CreatedOnToolsVersion = 6.3.2;
+						DevelopmentTeam = B5PRX3LC4P;
 						LastSwiftMigration = 0900;
 					};
 				};
@@ -516,6 +517,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_TEAM = B5PRX3LC4P;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -534,6 +536,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_TEAM = B5PRX3LC4P;
 				INFOPLIST_FILE = AgrumeTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.schnaub.$(PRODUCT_NAME:rfc1034identifier)";
