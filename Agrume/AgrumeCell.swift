@@ -255,8 +255,6 @@ extension AgrumeCell: UIGestureRecognizerDelegate {
       }
     case .dismissAlways:
       dismiss()
-    case .zoomOut where notZoomed:
-      dismiss()
     case .zoomOut:
       zoom(to: .zero, scale: 1)
     case .toggleOverlayVisibility:
