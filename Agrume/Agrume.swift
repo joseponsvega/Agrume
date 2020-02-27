@@ -20,6 +20,7 @@ public final class Agrume: UIViewController {
   
   private var overlayView: AgrumeOverlayView?
   private weak var dataSource: AgrumeDataSource?
+  private var navShown: Bool = false
 
   /// The background property. Set through the initialiser for most use cases.
   public var background: Background
@@ -235,9 +236,18 @@ public final class Agrume: UIViewController {
   /// - Parameters:
   ///   - viewController: The UIViewController to present from
   public func show(from viewController: UIViewController) {
+    navShown = false
     view.isUserInteractionEnabled = false
     addSubviews()
     present(from: viewController)
+  }
+  
+  // Present Agrume in a navigation stack
+  public func navShow(from viewController: UIViewController) {
+    navShown = true
+    view.isUserInteractionEnabled = false
+    addSubviews()
+    navPresent(from: viewController)
   }
 
   /// Update image at index
@@ -324,6 +334,30 @@ public final class Agrume: UIViewController {
       self.collectionView.transform = CGAffineTransform(scaleX: scale, y: scale)
 
       viewController.present(self, animated: false) {
+        UIView.animate(withDuration: .transitionAnimationDuration,
+                       delay: 0,
+                       options: .beginFromCurrentState,
+                       animations: {
+                        self.collectionView.alpha = 1
+                        self.collectionView.transform = .identity
+                        self.addOverlayView()
+        }, completion: { _ in
+          self.view.isUserInteractionEnabled = true
+        })
+      }
+    }
+  }
+  
+  private func navPresent(from viewController: UIViewController) {
+    DispatchQueue.main.async {
+      self.blurContainerView.alpha = 1
+      self.collectionView.alpha = 0
+      let scale: CGFloat = .initialScaleToExpandFrom
+      self.collectionView.transform = CGAffineTransform(scaleX: scale, y: scale)
+      
+      viewController.navigationController!.pushViewController(self, animated: true)
+      
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
         UIView.animate(withDuration: .transitionAnimationDuration,
                        delay: 0,
                        options: .beginFromCurrentState,
@@ -511,9 +545,17 @@ extension Agrume: AgrumeCellDelegate {
   }
   
   private func dismissCompletion(_ finished: Bool) {
-    presentingViewController?.dismiss(animated: false) { [unowned self] in
-      self.cleanup()
-      self.didDismiss?()
+    if navShown {
+      navigationController!.popViewController(animated: true)
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        self.cleanup()
+        self.didDismiss?()
+      }
+    } else {
+      presentingViewController?.dismiss(animated: false) { [unowned self] in
+        self.cleanup()
+        self.didDismiss?()
+      }
     }
   }
   
