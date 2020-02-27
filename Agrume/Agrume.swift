@@ -545,17 +545,9 @@ extension Agrume: AgrumeCellDelegate {
   }
   
   private func dismissCompletion(_ finished: Bool) {
-    if navShown {
-      navigationController!.popViewController(animated: true)
-      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-        self.cleanup()
-        self.didDismiss?()
-      }
-    } else {
-      presentingViewController?.dismiss(animated: false) { [unowned self] in
-        self.cleanup()
-        self.didDismiss?()
-      }
+    presentingViewController?.dismiss(animated: false) { [unowned self] in
+      self.cleanup()
+      self.didDismiss?()
     }
   }
   
@@ -571,33 +563,52 @@ extension Agrume: AgrumeCellDelegate {
     _spinner?.removeFromSuperview()
     _spinner = nil
   }
+  
+  private func navDismiss() {
+    navigationController!.popViewController(animated: true)
+    
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+      self.cleanup()
+      self.didDismiss?()
+    }
+  }
 
   func dismissAfterFlick() {
     self.willDismiss?()
-    UIView.animate(withDuration: .transitionAnimationDuration,
-                   delay: 0,
-                   options: .beginFromCurrentState,
-                   animations: {
-                    self.collectionView.alpha = 0
-                    self.blurContainerView.alpha = 0
-                    self.overlayView?.alpha = 0
-    }, completion: dismissCompletion)
+    
+    if navShown {
+      navDismiss()
+    } else {
+      UIView.animate(withDuration: .transitionAnimationDuration,
+                     delay: 0,
+                     options: .beginFromCurrentState,
+                     animations: {
+                      self.collectionView.alpha = 0
+                      self.blurContainerView.alpha = 0
+                      self.overlayView?.alpha = 0
+      }, completion: dismissCompletion)
+    }
   }
   
   func dismissAfterTap() {
     view.isUserInteractionEnabled = false
 
     self.willDismiss?()
-    UIView.animate(withDuration: .transitionAnimationDuration,
-                   delay: 0,
-                   options: .beginFromCurrentState,
-                   animations: {
-                    self.collectionView.alpha = 0
-                    self.blurContainerView.alpha = 0
-                    self.overlayView?.alpha = 0
-                    let scale: CGFloat = .maxScaleForExpandingOffscreen
-                    self.collectionView.transform = CGAffineTransform(scaleX: scale, y: scale)
-    }, completion: dismissCompletion)
+    
+    if navShown {
+      navDismiss()
+    } else {
+      UIView.animate(withDuration: .transitionAnimationDuration,
+                     delay: 0,
+                     options: .beginFromCurrentState,
+                     animations: {
+                      self.collectionView.alpha = 0
+                      self.blurContainerView.alpha = 0
+                      self.overlayView?.alpha = 0
+                      let scale: CGFloat = .maxScaleForExpandingOffscreen
+                      self.collectionView.transform = CGAffineTransform(scaleX: scale, y: scale)
+      }, completion: dismissCompletion)
+    }
   }
 
   func toggleOverlayVisibility() {
